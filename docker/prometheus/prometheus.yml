@@ -6,19 +6,19 @@ scrape_configs:
   - job_name: 'umms-api-gateway'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['172.31.13.71:8080']
+      - targets: ['api-gateway:8086']
         labels:
           application: 'API Gateway'
   - job_name: 'umms-user-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['172.31.13.71:8081']
+      - targets: ['user-service:8085']
         labels:
           application: 'User Service'
   - job_name: 'umms-service-discovery'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['172.31.13.71:8761']
+      - targets: ['service-discovery:8761']
         labels:
           application: 'Service Discovery'
   - job_name: 'umms-mortgage-service'
@@ -30,6 +30,6 @@ scrape_configs:
   - job_name: 'umms-notification-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['172.31.13.71:8083']
+      - targets: ['notification-service:8083']
         labels:
           application: 'Notification Service'

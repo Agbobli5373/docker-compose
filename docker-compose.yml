@@ -44,7 +44,7 @@ services:
     depends_on:
       - broker
     ports:
-      - "8085:8081"
+      - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "broker:29092"
@@ -53,7 +53,7 @@ services:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     ports:
-      - "8086:8080"
+      - "8080:8080"
     depends_on:
       - broker
     environment:
@@ -99,3 +99,50 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+
+  service-discovery:
+    image: agbobliisaac/service-discovery:latest
+    restart: on-failure
+    pull_policy: always
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+      - postgres
+    ports:
+      - "8761:8761"
+    env_file:
+      - ./env/service-discovery.env
+
+  api-gateway:
+    image: agbobliisaac/api-gateway:latest
+    restart: on-failure
+    pull_policy: always
+    ports:
+      - "8086:8086"
+    depends_on:
+      - service-discovery
+    env_file:
+      - ./env/api-gateway.env
+
+  user-service:
+    image: agbobliisaac/user-service:latest
+    restart: on-failure
+    pull_policy: always
+    ports:
+      - "8085:8085"
+    depends_on:
+      - service-discovery
+    env_file:
+      - ./env/user-service.env
+
+  notification-service:
+    image: agbobliisaac/notifcation:latest
+    pull_policy: always
+    restart: on-failure
+    ports:
+      - "8083:8083"
+    depends_on:
+      - service-discovery
+    env_file:
+      - ./env/notification-service.env
