@@ -1,8 +1,9 @@
-version: '4.0'
+version: "4.0"
 services:
   service-discovery:
     image: agbobliisaac/service-discovery:latest
     restart: on-failure
+    pull_policy: always
     ports:
       - "8761:8761"
     env_file:
@@ -11,29 +12,32 @@ services:
   api-gateway:
     image: agbobliisaac/api-gateway:latest
     restart: on-failure
+    pull_policy: always
     ports:
       - "8080:8080"
     depends_on:
       - service-discovery
     env_file:
-        - ./env/api-gateway.env
+      - ./env/api-gateway.env
 
   user-service:
     image: agbobliisaac/user-service:latest
     restart: on-failure
+    pull_policy: always
     ports:
       - "8081:8081"
     depends_on:
       - service-discovery
     env_file:
-        - ./env/user-service.env
+      - ./env/user-service.env
 
   notification-service:
     image: agbobliisaac/notifcation:latest
+    pull_policy: always
     restart: on-failure
     ports:
       - "8083:8083"
     depends_on:
       - service-discovery
     env_file:
-        - ./env/notification-service.env
+      - ./env/notification-service.env
